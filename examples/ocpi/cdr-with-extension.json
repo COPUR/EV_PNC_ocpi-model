@@ -1,0 +1,70 @@
+{
+  "country_code": "TR",
+  "party_id": "ZZZ",
+  "id": "CDR0001",
+  "start_date_time": "2026-11-02T09:15:00Z",
+  "end_date_time": "2026-11-02T09:45:00Z",
+  "session_id": "SES0001",
+  "cdr_token": {
+    "country_code": "TR",
+    "party_id": "ZZZ",
+    "uid": "04A2B3C4D5E6F7",
+    "type": "APP_USER",
+    "contract_id": "TR-ZZZ-C00000001-X"
+  },
+  "auth_method": "AUTH_REQUEST",
+  "cdr_location": {
+    "id": "LOC0001",
+    "name": "Test station",
+    "address": "Test Cd. 1",
+    "city": "Bodrum",
+    "country": "TUR",
+    "coordinates": {
+      "latitude": "37.0344",
+      "longitude": "27.4305"
+    },
+    "evse_uid": "EVSE0001",
+    "evse_id": "TR*ZZZ*E0001*1",
+    "connector_id": "1",
+    "connector_standard": "IEC_62196_T2_COMBO",
+    "connector_format": "CABLE",
+    "connector_power_type": "DC"
+  },
+  "currency": "TRY",
+  "charging_periods": [
+    {
+      "start_date_time": "2026-11-02T09:15:00Z",
+      "dimensions": [
+        {
+          "type": "ENERGY",
+          "volume": 31.2
+        },
+        {
+          "type": "TIME",
+          "volume": 0.5
+        }
+      ]
+    }
+  ],
+  "total_cost": {
+    "before_taxes": 312.0,
+    "taxes": [
+      {
+        "name": "VAT",
+        "percentage": 20.0,
+        "amount": 62.4
+      }
+    ]
+  },
+  "total_energy": 31.2,
+  "total_time": 0.5,
+  "last_updated": "2026-11-02T09:46:00Z",
+  "extensions": {
+    "oicp": {
+      "signed_metering": {
+        "format": "EXAMPLE",
+        "value_ref": "not-real"
+      }
+    }
+  }
+}
