@@ -6,7 +6,7 @@ cd "$(dirname "$0")/.."
 PKG=generated/python/ev_pnc_ocpi_model
 TMP=$(mktemp -d)
 trap 'rm -rf "$TMP"' EXIT
-uvx --quiet --from "datamodel-code-generator==0.86.0" datamodel-codegen \
+uvx --quiet --from "datamodel-code-generator==0.86.0" --with "ruff==0.16.9" datamodel-codegen \
   --input schema --input-file-type jsonschema \
   --output-model-type pydantic_v2.BaseModel \
   --use-annotated --disable-timestamp --target-python-version 3.11 \
