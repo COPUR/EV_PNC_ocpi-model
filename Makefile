@@ -1,5 +1,7 @@
 # OCPI_SPEC_DIR: checkout of COPUR/ocpi at the commit in tools/ocpi-spec-pin.json
 OCPI_SPEC_DIR ?= ../ocpi
+# the test targets cd into generated/*, so a relative path would resolve there
+OCPI_SPEC_ABS = $(abspath $(OCPI_SPEC_DIR))
 
 .PHONY: generate check test spec-checkout
 
@@ -14,8 +16,8 @@ check:
 	tools/gen_python.sh --check
 
 test:
-	cd generated/python && OCPI_SPEC_DIR=$(OCPI_SPEC_DIR) uv run --extra test python -m pytest -q
-	cd generated/kotlin && OCPI_SPEC_DIR=$(OCPI_SPEC_DIR) gradle test --no-daemon -q
+	cd generated/python && OCPI_SPEC_DIR=$(OCPI_SPEC_ABS) uv run --extra test python -m pytest -q
+	cd generated/kotlin && OCPI_SPEC_DIR=$(OCPI_SPEC_ABS) gradle test --no-daemon -q
 
 # fetch the pinned spec commit into ./.spec
 spec-checkout:
