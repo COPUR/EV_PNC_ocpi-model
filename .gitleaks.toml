@@ -10,3 +10,7 @@ useDefault = true
 # [[allowlists]]
 # description = "why this is safe"
 # paths = ['''docs/examples/sample-token\.md''']
+
+[[allowlists]]
+description = "Example event payloads with made-up token UIDs"
+paths = ['''^examples/events/[^/]+\.json$''']
