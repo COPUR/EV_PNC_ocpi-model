@@ -1,0 +1,21 @@
+{
+  "country_code": "TR",
+  "party_id": "ZZZ",
+  "id": "SES0001",
+  "start_date_time": "2026-11-02T09:15:00Z",
+  "kwh": 12.4,
+  "cdr_token": {
+    "country_code": "TR",
+    "party_id": "ZZZ",
+    "uid": "04A2B3C4D5E6F7",
+    "type": "APP_USER",
+    "contract_id": "TR-ZZZ-C00000001-X"
+  },
+  "auth_method": "AUTH_REQUEST",
+  "location_id": "LOC0001",
+  "evse_uid": "EVSE0001",
+  "connector_id": "1",
+  "currency": "TRY",
+  "status": "ACTIVE",
+  "last_updated": "2026-11-02T09:20:00Z"
+}

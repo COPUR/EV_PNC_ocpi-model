@@ -1,0 +1,7 @@
+.venv/
+__pycache__/
+*.pyc
+.spec/
+generated/kotlin/.gradle/
+generated/kotlin/build/
+generated/kotlin/.kotlin/

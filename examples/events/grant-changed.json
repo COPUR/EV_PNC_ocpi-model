@@ -1,0 +1,13 @@
+{
+  "event_id": "3f2b8c1e-5d3a-4e21-9a37-0c1d2e3f4a5b",
+  "event_type": "GrantChanged",
+  "schema_version": "0.1.0",
+  "occurred_at": "2026-11-02T09:15:00Z",
+  "producer": "ocpi-emsp",
+  "correlation_id": "c-1",
+  "grant_id": "g-1",
+  "subject_ref": "subj-9f3c",
+  "purpose": "roaming-data-sharing",
+  "change": "REVOKED",
+  "effective_at": "2026-11-02T10:00:00Z"
+}

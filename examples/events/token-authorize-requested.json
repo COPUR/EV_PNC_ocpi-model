@@ -1,0 +1,20 @@
+{
+  "event_id": "3f2b8c1e-5d3a-4e21-9a37-0c1d2e3f4a5b",
+  "event_type": "TokenAuthorizeRequested",
+  "schema_version": "0.1.0",
+  "occurred_at": "2026-11-02T09:15:00Z",
+  "producer": "ocpi-emsp",
+  "correlation_id": "c-1",
+  "request_id": "req-1",
+  "token_uid": "04A2B3C4D5E6F7",
+  "token_type": "APP_USER",
+  "location_references": {
+    "location_id": "LOC0001",
+    "evse_uids": [
+      "EVSE0001"
+    ]
+  },
+  "cpo_country_code": "TR",
+  "cpo_party_id": "ZZZ",
+  "channel": "BILATERAL_OCPI"
+}

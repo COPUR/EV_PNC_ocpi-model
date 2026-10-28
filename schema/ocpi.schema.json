@@ -1,0 +1,2449 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/COPUR/EV_PNC_ocpi-model/schema/ocpi.schema.json",
+  "title": "OCPI 2.3.0 canonical model (generated)",
+  "description": "Structure extracted from the OCPI 2.3.0 spec (CC BY-ND 4.0, EVRoaming Foundation) by tools/ocpi_to_schema.py; no spec text is copied. Do not edit.",
+  "x-ocpi-source": {
+    "repo": "https://github.com/COPUR/ocpi",
+    "tag": "v2.3.0",
+    "commit": "efdf2c5283c95b69caf11c2e39f432626bead730",
+    "note": "Merge tag v2.3.0 on master. Move with an ADR and a semver bump."
+  },
+  "$defs": {
+    "AdditionalGeoLocation": {
+      "title": "AdditionalGeoLocation",
+      "type": "object",
+      "properties": {
+        "latitude": {
+          "type": "string",
+          "pattern": "^[^\\x00-\\x1f\\x7f]*$",
+          "maxLength": 10
+        },
+        "longitude": {
+          "type": "string",
+          "pattern": "^[^\\x00-\\x1f\\x7f]*$",
+          "maxLength": 11
+        },
+        "name": {
+          "$ref": "#/$defs/DisplayText"
+        }
+      },
+      "required": [
+        "latitude",
+        "longitude"
+      ],
+      "x-ocpi-spec": "mod_locations.asciidoc"
+    },
+    "AllowedType": {
+      "title": "AllowedType",
+      "type": "string",
+      "enum": [
+        "ALLOWED",
+        "BLOCKED",
+        "EXPIRED",
+        "NO_CREDIT",
+        "NOT_ALLOWED"
+      ],
+      "x-ocpi-spec": "mod_tokens.asciidoc"
+    },
+    "AuthMethod": {
+      "title": "AuthMethod",
+      "type": "string",
+      "enum": [
+        "AUTH_REQUEST",
+        "COMMAND",
+        "WHITELIST"
+      ],
+      "x-ocpi-spec": "mod_cdrs.asciidoc"
+    },
+    "AuthorizationInfo": {
+      "title": "AuthorizationInfo",
+      "type": "object",
+      "properties": {
+        "allowed": {
+          "$ref": "#/$defs/AllowedType"
+        },
+        "token": {
+          "$ref": "#/$defs/Token"
+        },
+        "location": {
+          "$ref": "#/$defs/LocationReferences"
+        },
+        "authorization_reference": {
+          "type": "string",
+          "pattern": "^[\\x20-\\x7e]*$",
+          "x-ocpi-case-insensitive": true,
+          "maxLength": 36
+        },
+        "info": {
+          "$ref": "#/$defs/DisplayText"
+        }
+      },
+      "required": [
+        "allowed",
+        "token"
+      ],
+      "x-ocpi-spec": "mod_tokens.asciidoc"
+    },
+    "BusinessDetails": {
+      "title": "BusinessDetails",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^[^\\x00-\\x1f\\x7f]*$",
+          "maxLength": 100
+        },
+        "website": {
+          "type": "string",
+          "maxLength": 255,
+          "format": "uri"
+        },
+        "logo": {
+          "$ref": "#/$defs/Image"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "x-ocpi-spec": "mod_locations.asciidoc"
+    },
+    "CDR": {
+      "title": "CDR",
+      "type": "object",
+      "properties": {
+        "country_code": {
+          "type": "string",
+          "pattern": "^[\\x20-\\x7e]*$",
+          "x-ocpi-case-insensitive": true,
+          "maxLength": 2
+        },
+        "party_id": {
+          "type": "string",
+          "pattern": "^[\\x20-\\x7e]*$",
+          "x-ocpi-case-insensitive": true,
+          "maxLength": 3
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^[\\x20-\\x7e]*$",
+          "x-ocpi-case-insensitive": true,
+          "maxLength": 39
+        },
+        "start_date_time": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z?$",
+          "x-ocpi-type": "DateTime"
+        },
+        "end_date_time": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z?$",
+          "x-ocpi-type": "DateTime"
+        },
+        "session_id": {
+          "type": "string",
+          "pattern": "^[\\x20-\\x7e]*$",
+          "x-ocpi-case-insensitive": true,
+          "maxLength": 36
+        },
+        "cdr_token": {
+          "$ref": "#/$defs/CdrToken"
+        },
+        "auth_method": {
+          "$ref": "#/$defs/AuthMethod"
+        },
+        "authorization_reference": {
+          "type": "string",
+          "pattern": "^[\\x20-\\x7e]*$",
+          "x-ocpi-case-insensitive": true,
+          "maxLength": 36
+        },
+        "cdr_location": {
+          "$ref": "#/$defs/CdrLocation"
+        },
+        "meter_id": {
+          "type": "string",
+          "pattern": "^[^\\x00-\\x1f\\x7f]*$",
+          "maxLength": 255
+        },
+        "currency": {
+          "type": "string",
+          "pattern": "^[^\\x00-\\x1f\\x7f]*$",
+          "maxLength": 3
+        },
+        "tariffs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Tariff"
+          }
+        },
+        "charging_periods": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ChargingPeriod"
+          },
+          "minItems": 1
+        },
+        "signed_data": {
+          "$ref": "#/$defs/SignedData"
+        },
+        "total_cost": {
+          "$ref": "#/$defs/Price"
+        },
+        "total_fixed_cost": {
+          "$ref": "#/$defs/Price"
+        },
+        "total_energy": {
+          "type": "number"
+        },
+        "total_energy_cost": {
+          "$ref": "#/$defs/Price"
+        },
+        "total_time": {
+          "type": "number"
+        },
+        "total_time_cost": {
+          "$ref": "#/$defs/Price"
+        },
+        "total_parking_time": {
+          "type": "number"
+        },
+        "total_parking_cost": {
+          "$ref": "#/$defs/Price"
+        },
+        "total_reservation_cost": {
+          "$ref": "#/$defs/Price"
+        },
+        "remark": {
+          "type": "string",
+          "pattern": "^[^\\x00-\\x1f\\x7f]*$",
+          "maxLength": 255
+        },
+        "invoice_reference_id": {
+          "type": "string",
+          "pattern": "^[\\x20-\\x7e]*$",
+          "x-ocpi-case-insensitive": true,
+          "maxLength": 39
+        },
+        "credit": {
+          "type": "boolean"
+        },
+        "credit_reference_id": {
+          "type": "string",
+          "pattern": "^[\\x20-\\x7e]*$",
+          "x-ocpi-case-insensitive": true,
+          "maxLength": 39
+        },
+        "home_charging_compensation": {
+          "type": "boolean"
+        },
+        "last_updated": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z?$",
+          "x-ocpi-type": "DateTime"
+        },
+        "extensions": {
+          "$ref": "#/$defs/Extensions"
+        }
+      },
+      "required": [
+        "country_code",
+        "party_id",
+        "id",
+        "start_date_time",
+        "end_date_time",
+        "cdr_token",
+        "auth_method",
+        "cdr_location",
+        "currency",
+        "charging_periods",
+        "total_cost",
+        "total_energy",
+        "total_time",
+        "last_updated"
+      ],
+      "x-ocpi-spec": "mod_cdrs.asciidoc"
+    },
+    "CancelReservation": {
+      "title": "CancelReservation",
+      "type": "object",
+      "properties": {
+        "response_url": {
+          "type": "string",
+          "maxLength": 255,
+          "format": "uri"
+        },
+        "reservation_id": {
+          "type": "string",
+          "pattern": "^[\\x20-\\x7e]*$",
+          "x-ocpi-case-insensitive": true,
+          "maxLength": 36
+        }
+      },
+      "required": [
+        "response_url",
+        "reservation_id"
+      ],
+      "x-ocpi-spec": "mod_commands.asciidoc"
+    },
+    "Capability": {
+      "title": "Capability",
+      "type": "string",
+      "x-ocpi-open-enum": true,
+      "examples": [
+        "CHARGING_PROFILE_CAPABLE",
+        "CHARGING_PREFERENCES_CAPABLE",
+        "CHIP_CARD_SUPPORT",
+        "CONTACTLESS_CARD_SUPPORT",
+        "CREDIT_CARD_PAYABLE",
+        "DEBIT_CARD_PAYABLE",
+        "PED_TERMINAL",
+        "REMOTE_START_STOP_CAPABLE",
+        "RESERVABLE",
+        "RFID_READER",
+        "START_SESSION_CONNECTOR_REQUIRED",
+        "TOKEN_GROUP_CAPABLE",
+        "UNLOCK_CAPABLE"
+      ],
+      "x-ocpi-spec": "mod_locations.asciidoc"
+    },
+    "CdrDimension": {
+      "title": "CdrDimension",
+      "type": "object",
+      "properties": {
+        "type": {
+          "$ref": "#/$defs/CdrDimensionType"
+        },
+        "volume": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "type",
+        "volume"
+      ],
+      "x-ocpi-spec": "mod_cdrs.asciidoc"
+    },
+    "CdrDimensionType": {
+      "title": "CdrDimensionType",
+      "type": "string",
+      "enum": [
+        "CURRENT",
+        "ENERGY",
+        "ENERGY_EXPORT",
+        "ENERGY_IMPORT",
+        "MAX_CURRENT",
+        "MIN_CURRENT",
+        "MAX_POWER",
+        "MIN_POWER",
+        "PARKING_TIME",
+        "POWER",
+        "RESERVATION_TIME",
+        "STATE_OF_CHARGE",
+        "TIME"
+      ],
+      "x-ocpi-spec": "mod_cdrs.asciidoc"
+    },
+    "CdrLocation": {
+      "title": "CdrLocation",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[\\x20-\\x7e]*$",
+          "x-ocpi-case-insensitive": true,
+          "maxLength": 36
+        },
+        "name": {
+          "type": "string",
+          "pattern": "^[^\\x00-\\x1f\\x7f]*$",
+          "maxLength": 255
+        },
+        "address": {
+          "type": "string",
+          "pattern": "^[^\\x00-\\x1f\\x7f]*$",
+          "maxLength": 45
+        },
+        "city": {
+          "type": "string",
+          "pattern": "^[^\\x00-\\x1f\\x7f]*$",
+          "maxLength": 45
+        },
+        "postal_code": {
+          "type": "string",
+          "pattern": "^[^\\x00-\\x1f\\x7f]*$",
+          "maxLength": 10
+        },
+        "state": {
+          "type": "string",
+          "pattern": "^[^\\x00-\\x1f\\x7f]*$",
+          "maxLength": 20
+        },
+        "country": {
+          "type": "string",
+          "pattern": "^[^\\x00-\\x1f\\x7f]*$",
+          "maxLength": 3
+        },
+        "coordinates": {
+          "$ref": "#/$defs/GeoLocation"
+        },
+        "evse_uid": {
+          "type": "string",
+          "pattern": "^[\\x20-\\x7e]*$",
+          "x-ocpi-case-insensitive": true,
+          "maxLength": 36
+        },
+        "evse_id": {
+          "type": "string",
+          "pattern": "^[\\x20-\\x7e]*$",
+          "x-ocpi-case-insensitive": true,
+          "maxLength": 48
+        },
+        "connector_id": {
+          "type": "string",
+          "pattern": "^[\\x20-\\x7e]*$",
+          "x-ocpi-case-insensitive": true,
+          "maxLength": 36
+        },
+        "connector_standard": {
+          "$ref": "#/$defs/ConnectorType"
+        },
+        "connector_format": {
+          "$ref": "#/$defs/ConnectorFormat"
+        },
+        "connector_power_type": {
+          "$ref": "#/$defs/PowerType"
+        }
+      },
+      "required": [
+        "id",
+        "address",
+        "city",
+        "country",
+        "coordinates",
+        "evse_uid",
+        "evse_id",
+        "connector_id",
+        "connector_standard",
+        "connector_format",
+        "connector_power_type"
+      ],
+      "x-ocpi-spec": "mod_cdrs.asciidoc"
+    },
+    "CdrToken": {
+      "title": "CdrToken",
+      "type": "object",
+      "properties": {
+        "country_code": {
+          "type": "string",
+          "pattern": "^[\\x20-\\x7e]*$",
+          "x-ocpi-case-insensitive": true,
+          "maxLength": 2
+        },
+        "party_id": {
+          "type": "string",
+          "pattern": "^[\\x20-\\x7e]*$",
+          "x-ocpi-case-insensitive": true,
+          "maxLength": 3
+        },
+        "uid": {
+          "type": "string",
+          "pattern": "^[\\x20-\\x7e]*$",
+          "x-ocpi-case-insensitive": true,
+          "maxLength": 36
+        },
+        "type": {
+          "$ref": "#/$defs/TokenType"
+        },
+        "contract_id": {
+          "type": "string",
+          "pattern": "^[\\x20-\\x7e]*$",
+          "x-ocpi-case-insensitive": true,
+          "maxLength": 36
+        }
+      },
+      "required": [
+        "country_code",
+        "party_id",
+        "uid",
+        "type",
+        "contract_id"
+      ],
+      "x-ocpi-spec": "mod_cdrs.asciidoc"
+    },
+    "ChargingPeriod": {
+      "title": "ChargingPeriod",
+      "type": "object",
+      "properties": {
+        "start_date_time": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z?$",
+          "x-ocpi-type": "DateTime"
+        },
+        "dimensions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/CdrDimension"
+          },
+          "minItems": 1
+        },
+        "tariff_id": {
+          "type": "string",
+          "pattern": "^[\\x20-\\x7e]*$",
+          "x-ocpi-case-insensitive": true,
+          "maxLength": 36
+        }
+      },
+      "required": [
+        "start_date_time",
+        "dimensions"
+      ],
+      "x-ocpi-spec": "mod_cdrs.asciidoc"
+    },
+    "ChargingPreferences": {
+      "title": "ChargingPreferences",
+      "type": "object",
+      "properties": {
+        "profile_type": {
+          "$ref": "#/$defs/ProfileType"
+        },
+        "departure_time": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z?$",
+          "x-ocpi-type": "DateTime"
+        },
+        "energy_need": {
+          "type": "number"
+        },
+        "discharge_allowed": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "profile_type"
+      ],
+      "x-ocpi-spec": "mod_sessions.asciidoc"
+    },
+    "CommandResponse": {
+      "title": "CommandResponse",
+      "type": "object",
+      "properties": {
+        "result": {
+          "$ref": "#/$defs/CommandResponseType"
+        },
+        "timeout": {
+          "type": "integer"
+        },
+        "message": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/DisplayText"
+          }
+        }
+      },
+      "required": [
+        "result",
+        "timeout"
+      ],
+      "x-ocpi-spec": "mod_commands.asciidoc"
+    },
+    "CommandResponseType": {
+      "title": "CommandResponseType",
+      "type": "string",
+      "enum": [
+        "NOT_SUPPORTED",
+        "REJECTED",
+        "ACCEPTED",
+        "UNKNOWN_SESSION"
+      ],
+      "x-ocpi-spec": "mod_commands.asciidoc"
+    },
+    "CommandResult": {
+      "title": "CommandResult",
+      "type": "object",
+      "properties": {
+        "result": {
+          "$ref": "#/$defs/CommandResultType"
+        },
+        "message": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/DisplayText"
+          }
+        }
+      },
+      "required": [
+        "result"
+      ],
+      "x-ocpi-spec": "mod_commands.asciidoc"
+    },
+    "CommandResultType": {
+      "title": "CommandResultType",
+      "type": "string",
+      "enum": [
+        "ACCEPTED",
+        "CANCELED_RESERVATION",
+        "EVSE_OCCUPIED",
+        "EVSE_INOPERATIVE",
+        "FAILED",
+        "NOT_SUPPORTED",
+        "REJECTED",
+        "TIMEOUT",
+        "UNKNOWN_RESERVATION"
+      ],
+      "x-ocpi-spec": "mod_commands.asciidoc"
+    },
+    "Connector": {
+      "title": "Connector",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[\\x20-\\x7e]*$",
+          "x-ocpi-case-insensitive": true,
+          "maxLength": 36
+        },
+        "standard": {
+          "$ref": "#/$defs/ConnectorType"
+        },
+        "format": {
+          "$ref": "#/$defs/ConnectorFormat"
+        },
+        "power_type": {
+          "$ref": "#/$defs/PowerType"
+        },
+        "max_voltage": {
+          "type": "integer"
+        },
+        "max_amperage": {
+          "type": "integer"
+        },
+        "max_electric_power": {
+          "type": "integer"
+        },
+        "tariff_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[\\x20-\\x7e]*$",
+            "x-ocpi-case-insensitive": true,
+            "maxLength": 36
+          }
+        },
+        "terms_and_conditions": {
+          "type": "string",
+          "maxLength": 255,
+          "format": "uri"
+        },
+        "capabilities": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ConnectorCapability"
+          }
+        },
+        "last_updated": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z?$",
+          "x-ocpi-type": "DateTime"
+        }
+      },
+      "required": [
+        "id",
+        "standard",
+        "format",
+        "power_type",
+        "max_voltage",
+        "max_amperage",
+        "last_updated"
+      ],
+      "x-ocpi-spec": "mod_locations.asciidoc"
+    },
+    "ConnectorCapability": {
+      "title": "ConnectorCapability",
+      "type": "string",
+      "x-ocpi-open-enum": true,
+      "examples": [
+        "ISO_15118_2_PLUG_AND_CHARGEa",
+        "ISO_15118_20_PLUG_AND_CHARGEa"
+      ],
+      "x-ocpi-spec": "mod_locations.asciidoc"
+    },
+    "ConnectorFormat": {
+      "title": "ConnectorFormat",
+      "type": "string",
+      "enum": [
+        "SOCKET",
+        "CABLE"
+      ],
+      "x-ocpi-spec": "mod_locations.asciidoc"
+    },
+    "ConnectorType": {
+      "title": "ConnectorType",
+      "type": "string",
+      "x-ocpi-open-enum": true,
+      "examples": [
+        "CHADEMO",
+        "CHAOJI",
+        "DOMESTIC_A",
+        "DOMESTIC_B",
+        "DOMESTIC_C",
+        "DOMESTIC_D",
+        "DOMESTIC_E",
+        "DOMESTIC_F",
+        "DOMESTIC_G",
+        "DOMESTIC_H",
+        "DOMESTIC_I",
+        "DOMESTIC_J",
+        "DOMESTIC_K",
+        "DOMESTIC_L",
+        "DOMESTIC_M",
+        "DOMESTIC_N",
+        "DOMESTIC_O",
+        "GBT_AC",
+        "GBT_DC",
+        "IEC_60309_2_single_16",
+        "IEC_60309_2_three_16",
+        "IEC_60309_2_three_32",
+        "IEC_60309_2_three_64",
+        "IEC_62196_T1",
+        "IEC_62196_T1_COMBO",
+        "IEC_62196_T2",
+        "IEC_62196_T2_COMBO",
+        "IEC_62196_T3A",
+        "IEC_62196_T3C",
+        "MCS",
+        "NEMA_5_20",
+        "NEMA_6_30",
+        "NEMA_6_50",
+        "NEMA_10_30",
+        "NEMA_10_50",
+        "NEMA_14_30",
+        "NEMA_14_50",
+        "PANTOGRAPH_BOTTOM_UP",
+        "PANTOGRAPH_TOP_DOWN",
+        "SAE_J3400",
+        "TESLA_R",
+        "TESLA_S"
+      ],
+      "x-ocpi-spec": "mod_locations.asciidoc"
+    },
+    "Credentials": {
+      "title": "Credentials",
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string",
+          "pattern": "^[^\\x00-\\x1f\\x7f]*$",
+          "maxLength": 64
+        },
+        "url": {
+          "type": "string",
+          "maxLength": 255,
+          "format": "uri"
+        },
+        "hub_party_id": {
+          "type": "string",
+          "pattern": "^[\\x20-\\x7e]*$",
+          "x-ocpi-case-insensitive": true,
+          "maxLength": 5
+        },
+        "roles": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/CredentialsRole"
+          },
+          "minItems": 1
+        }
+      },
+      "required": [
+        "token",
+        "url",
+        "roles"
+      ],
+      "x-ocpi-spec": "credentials.asciidoc"
+    },
+    "CredentialsRole": {
+      "title": "CredentialsRole",
+      "type": "object",
+      "properties": {
+        "role": {
+          "$ref": "#/$defs/Role"
+        },
+        "business_details": {
+          "$ref": "#/$defs/BusinessDetails"
+        },
+        "party_id": {
+          "type": "string",
+          "pattern": "^[\\x20-\\x7e]*$",
+          "x-ocpi-case-insensitive": true,
+          "maxLength": 3
+        },
+        "country_code": {
+          "type": "string",
+          "pattern": "^[\\x20-\\x7e]*$",
+          "x-ocpi-case-insensitive": true,
+          "maxLength": 2
+        }
+      },
+      "required": [
+        "role",
+        "business_details",
+        "party_id",
+        "country_code"
+      ],
+      "x-ocpi-spec": "credentials.asciidoc"
+    },
+    "DayOfWeek": {
+      "title": "DayOfWeek",
+      "type": "string",
+      "enum": [
+        "MONDAY",
+        "TUESDAY",
+        "WEDNESDAY",
+        "THURSDAY",
+        "FRIDAY",
+        "SATURDAY",
+        "SUNDAY"
+      ],
+      "x-ocpi-spec": "mod_tariffs.asciidoc"
+    },
+    "DisplayText": {
+      "title": "DisplayText",
+      "type": "object",
+      "properties": {
+        "language": {
+          "type": "string",
+          "pattern": "^[^\\x00-\\x1f\\x7f]*$",
+          "maxLength": 2
+        },
+        "text": {
+          "type": "string",
+          "pattern": "^[^\\x00-\\x1f\\x7f]*$",
+          "maxLength": 512
+        }
+      },
+      "required": [
+        "language",
+        "text"
+      ],
+      "x-ocpi-spec": "types.asciidoc"
+    },
+    "EVSE": {
+      "title": "EVSE",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "pattern": "^[\\x20-\\x7e]*$",
+          "x-ocpi-case-insensitive": true,
+          "maxLength": 36
+        },
+        "evse_id": {
+          "type": "string",
+          "pattern": "^[\\x20-\\x7e]*$",
+          "x-ocpi-case-insensitive": true,
+          "maxLength": 48
+        },
+        "status": {
+          "$ref": "#/$defs/Status"
+        },
+        "status_schedule": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/StatusSchedule"
+          }
+        },
+        "capabilities": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Capability"
+          }
+        },
+        "connectors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Connector"
+          },
+          "minItems": 1
+        },
+        "floor_level": {
+          "type": "string",
+          "pattern": "^[^\\x00-\\x1f\\x7f]*$",
+          "maxLength": 4
+        },
+        "coordinates": {
+          "$ref": "#/$defs/GeoLocation"
+        },
+        "physical_reference": {
+          "type": "string",
+          "pattern": "^[^\\x00-\\x1f\\x7f]*$",
+          "maxLength": 16
+        },
+        "directions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/DisplayText"
+          }
+        },
+        "parking_restrictions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ParkingRestriction"
+          }
+        },
+        "parking": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EVSEParking"
+          }
+        },
+        "images": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Image"
+          }
+        },
+        "accepted_service_providers": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[^\\x00-\\x1f\\x7f]*$",
+            "maxLength": 50
+          }
+        },
+        "last_updated": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z?$",
+          "x-ocpi-type": "DateTime"
+        }
+      },
+      "required": [
+        "uid",
+        "status",
+        "connectors",
+        "last_updated"
+      ],
+      "x-ocpi-spec": "mod_locations.asciidoc"
+    },
+    "EVSEParking": {
+      "title": "EVSEParking",
+      "type": "object",
+      "properties": {
+        "parking_id": {
+          "type": "string",
+          "pattern": "^[\\x20-\\x7e]*$",
+          "x-ocpi-case-insensitive": true,
+          "maxLength": 36
+        },
+        "evse_position": {
+          "$ref": "#/$defs/EVSEPosition"
+        }
+      },
+      "required": [
+        "parking_id"
+      ],
+      "x-ocpi-spec": "mod_locations.asciidoc"
+    },
+    "EVSEPosition": {
+      "title": "EVSEPosition",
+      "type": "string",
+      "enum": [
+        "LEFTa",
+        "RIGHTa",
+        "CENTERa"
+      ],
+      "x-ocpi-spec": "mod_locations.asciidoc"
+    },
+    "EnergyContract": {
+      "title": "EnergyContract",
+      "type": "object",
+      "properties": {
+        "supplier_name": {
+          "type": "string",
+          "pattern": "^[^\\x00-\\x1f\\x7f]*$",
+          "maxLength": 64
+        },
+        "contract_id": {
+          "type": "string",
+          "pattern": "^[^\\x00-\\x1f\\x7f]*$",
+          "maxLength": 64
+        }
+      },
+      "required": [
+        "supplier_name"
+      ],
+      "x-ocpi-spec": "mod_tokens.asciidoc"
+    },
+    "EnergyMix": {
+      "title": "EnergyMix",
+      "type": "object",
+      "properties": {
+        "is_green_energy": {
+          "type": "boolean"
+        },
+        "energy_sources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EnergySource"
+          }
+        },
+        "environ_impact": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EnvironmentalImpact"
+          }
+        },
+        "supplier_name": {
+          "type": "string",
+          "pattern": "^[^\\x00-\\x1f\\x7f]*$",
+          "maxLength": 64
+        },
+        "energy_product_name": {
+          "type": "string",
+          "pattern": "^[^\\x00-\\x1f\\x7f]*$",
+          "maxLength": 64
+        }
+      },
+      "required": [
+        "is_green_energy"
+      ],
+      "x-ocpi-spec": "mod_locations.asciidoc"
+    },
+    "EnergySource": {
+      "title": "EnergySource",
+      "type": "object",
+      "properties": {
+        "source": {
+          "$ref": "#/$defs/EnergySourceCategory"
+        },
+        "percentage": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "source",
+        "percentage"
+      ],
+      "x-ocpi-spec": "mod_locations.asciidoc"
+    },
+    "EnergySourceCategory": {
+      "title": "EnergySourceCategory",
+      "type": "string",
+      "enum": [
+        "NUCLEAR",
+        "GENERAL_FOSSIL",
+        "COAL",
+        "GAS",
+        "GENERAL_GREEN",
+        "SOLAR",
+        "WIND",
+        "WATER"
+      ],
+      "x-ocpi-spec": "mod_locations.asciidoc"
+    },
+    "EnvironmentalImpact": {
+      "title": "EnvironmentalImpact",
+      "type": "object",
+      "properties": {
+        "category": {
+          "$ref": "#/$defs/EnvironmentalImpactCategory"
+        },
+        "amount": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "category",
+        "amount"
+      ],
+      "x-ocpi-spec": "mod_locations.asciidoc"
+    },
+    "EnvironmentalImpactCategory": {
+      "title": "EnvironmentalImpactCategory",
+      "type": "string",
+      "x-ocpi-open-enum": true,
+      "examples": [
+        "NUCLEAR_WASTE",
+        "CARBON_DIOXIDE"
+      ],
+      "x-ocpi-spec": "mod_locations.asciidoc"
+    },
+    "ExceptionalPeriod": {
+      "title": "ExceptionalPeriod",
+      "type": "object",
+      "properties": {
+        "period_begin": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z?$",
+          "x-ocpi-type": "DateTime"
+        },
+        "period_end": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z?$",
+          "x-ocpi-type": "DateTime"
+        }
+      },
+      "required": [
+        "period_begin",
+        "period_end"
+      ],
+      "x-ocpi-spec": "mod_locations.asciidoc"
+    },
+    "Extensions": {
+      "title": "Extensions",
+      "type": "object",
+      "description": "Vendor or hub specific data with no canonical field, keyed by a lower-case namespace such as oicp or gireve. Producers add, consumers ignore namespaces they do not know. Anything used by two services moves into the model by ADR.",
+      "propertyNames": {
+        "pattern": "^[a-z][a-z0-9_]{1,31}$"
+      },
+      "additionalProperties": {
+        "type": "object"
+      },
+      "x-ocpi-spec": "none (EV_PNC extension)"
+    },
+    "Facility": {
+      "title": "Facility",
+      "type": "string",
+      "x-ocpi-open-enum": true,
+      "examples": [
+        "HOTEL",
+        "RESTAURANT",
+        "CAFE",
+        "MALL",
+        "SUPERMARKET",
+        "SPORT",
+        "RECREATION_AREA",
+        "NATURE",
+        "MUSEUM",
+        "BIKE_SHARING",
+        "BUS_STOP",
+        "TAXI_STAND",
+        "TRAM_STOP",
+        "METRO_STATION",
+        "TRAIN_STATION",
+        "AIRPORT",
+        "PARKING_LOT",
+        "CARPOOL_PARKING",
+        "FUEL_STATION",
+        "WIFI"
+      ],
+      "x-ocpi-spec": "mod_locations.asciidoc"
+    },
+    "GeoLocation": {
+      "title": "GeoLocation",
+      "type": "object",
+      "properties": {
+        "latitude": {
+          "type": "string",
+          "pattern": "^[^\\x00-\\x1f\\x7f]*$",
+          "maxLength": 10
+        },
+        "longitude": {
+          "type": "string",
+          "pattern": "^[^\\x00-\\x1f\\x7f]*$",
+          "maxLength": 11
+        }
+      },
+      "required": [
+        "latitude",
+        "longitude"
+      ],
+      "x-ocpi-spec": "mod_locations.asciidoc"
+    },
+    "Hours": {
+      "title": "Hours",
+      "type": "object",
+      "properties": {
+        "twentyfourseven": {
+          "type": "boolean"
+        },
+        "regular_hours": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/RegularHours"
+          }
+        },
+        "exceptional_openings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ExceptionalPeriod"
+          }
+        },
+        "exceptional_closings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ExceptionalPeriod"
+          }
+        }
+      },
+      "required": [
+        "twentyfourseven"
+      ],
+      "x-ocpi-spec": "mod_locations.asciidoc"
+    },
+    "Image": {
+      "title": "Image",
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "maxLength": 255,
+          "format": "uri"
+        },
+        "thumbnail": {
+          "type": "string",
+          "maxLength": 255,
+          "format": "uri"
+        },
+        "category": {
+          "$ref": "#/$defs/ImageCategory"
+        },
+        "type": {
+          "type": "string",
+          "pattern": "^[\\x20-\\x7e]*$",
+          "x-ocpi-case-insensitive": true,
+          "maxLength": 4
+        },
+        "width": {
+          "type": "integer"
+        },
+        "height": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "url",
+        "category",
+        "type"
+      ],
+      "x-ocpi-spec": "mod_locations.asciidoc"
+    },
+    "ImageCategory": {
+      "title": "ImageCategory",
+      "type": "string",
+      "x-ocpi-open-enum": true,
+      "examples": [
+        "CHARGER",
+        "ENTRANCE",
+        "LOCATION",
+        "NETWORK",
+        "OPERATOR",
+        "OTHER",
+        "OWNER"
+      ],
+      "x-ocpi-spec": "mod_locations.asciidoc"
+    },
+    "Location": {
+      "title": "Location",
+      "type": "object",
+      "properties": {
+        "country_code": {
+          "type": "string",
+          "pattern": "^[\\x20-\\x7e]*$",
+          "x-ocpi-case-insensitive": true,
+          "maxLength": 2
+        },
+        "party_id": {
+          "type": "string",
+          "pattern": "^[\\x20-\\x7e]*$",
+          "x-ocpi-case-insensitive": true,
+          "maxLength": 3
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^[\\x20-\\x7e]*$",
+          "x-ocpi-case-insensitive": true,
+          "maxLength": 36
+        },
+        "publish": {
+          "type": "boolean"
+        },
+        "publish_allowed_to": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/PublishTokenType"
+          }
+        },
+        "name": {
+          "type": "string",
+          "pattern": "^[^\\x00-\\x1f\\x7f]*$",
+          "maxLength": 255
+        },
+        "address": {
+          "type": "string",
+          "pattern": "^[^\\x00-\\x1f\\x7f]*$",
+          "maxLength": 45
+        },
+        "city": {
+          "type": "string",
+          "pattern": "^[^\\x00-\\x1f\\x7f]*$",
+          "maxLength": 45
+        },
+        "postal_code": {
+          "type": "string",
+          "pattern": "^[^\\x00-\\x1f\\x7f]*$",
+          "maxLength": 10
+        },
+        "state": {
+          "type": "string",
+          "pattern": "^[^\\x00-\\x1f\\x7f]*$",
+          "maxLength": 20
+        },
+        "country": {
+          "type": "string",
+          "pattern": "^[^\\x00-\\x1f\\x7f]*$",
+          "maxLength": 3
+        },
+        "coordinates": {
+          "$ref": "#/$defs/GeoLocation"
+        },
+        "related_locations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/AdditionalGeoLocation"
+          }
+        },
+        "parking_type": {
+          "$ref": "#/$defs/ParkingType"
+        },
+        "evses": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/EVSE"
+          }
+        },
+        "parking_places": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Parking"
+          }
+        },
+        "directions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/DisplayText"
+          }
+        },
+        "operator": {
+          "$ref": "#/$defs/BusinessDetails"
+        },
+        "suboperator": {
+          "$ref": "#/$defs/BusinessDetails"
+        },
+        "owner": {
+          "$ref": "#/$defs/BusinessDetails"
+        },
+        "facilities": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Facility"
+          }
+        },
+        "time_zone": {
+          "type": "string",
+          "pattern": "^[^\\x00-\\x1f\\x7f]*$",
+          "maxLength": 255
+        },
+        "opening_times": {
+          "$ref": "#/$defs/Hours"
+        },
+        "charging_when_closed": {
+          "type": "boolean"
+        },
+        "images": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Image"
+          }
+        },
+        "energy_mix": {
+          "$ref": "#/$defs/EnergyMix"
+        },
+        "help_phone": {
+          "type": "string",
+          "pattern": "^[\\x20-\\x7e]*$",
+          "x-ocpi-case-insensitive": true,
+          "maxLength": 25
+        },
+        "last_updated": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z?$",
+          "x-ocpi-type": "DateTime"
+        }
+      },
+      "required": [
+        "country_code",
+        "party_id",
+        "id",
+        "publish",
+        "address",
+        "city",
+        "country",
+        "coordinates",
+        "time_zone",
+        "last_updated"
+      ],
+      "x-ocpi-spec": "mod_locations.asciidoc"
+    },
+    "LocationReferences": {
+      "title": "LocationReferences",
+      "type": "object",
+      "properties": {
+        "location_id": {
+          "type": "string",
+          "pattern": "^[\\x20-\\x7e]*$",
+          "x-ocpi-case-insensitive": true,
+          "maxLength": 36
+        },
+        "evse_uids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[\\x20-\\x7e]*$",
+            "x-ocpi-case-insensitive": true,
+            "maxLength": 36
+          }
+        }
+      },
+      "required": [
+        "location_id"
+      ],
+      "x-ocpi-spec": "mod_tokens.asciidoc"
+    },
+    "Parking": {
+      "title": "Parking",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[\\x20-\\x7e]*$",
+          "x-ocpi-case-insensitive": true,
+          "maxLength": 36
+        },
+        "physical_reference": {
+          "type": "string",
+          "pattern": "^[^\\x00-\\x1f\\x7f]*$",
+          "maxLength": 12
+        },
+        "vehicle_types": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/VehicleType"
+          },
+          "minItems": 1
+        },
+        "max_vehicle_weight": {
+          "type": "number"
+        },
+        "max_vehicle_height": {
+          "type": "number"
+        },
+        "max_vehicle_length": {
+          "type": "number"
+        },
+        "max_vehicle_width": {
+          "type": "number"
+        },
+        "parking_space_length": {
+          "type": "number"
+        },
+        "parking_space_width": {
+          "type": "number"
+        },
+        "dangerous_goods_allowed": {
+          "type": "boolean"
+        },
+        "direction": {
+          "$ref": "#/$defs/ParkingDirection"
+        },
+        "drive_through": {
+          "type": "boolean"
+        },
+        "restricted_to_type": {
+          "type": "boolean"
+        },
+        "reservation_required": {
+          "type": "boolean"
+        },
+        "time_limit": {
+          "type": "number"
+        },
+        "roofed": {
+          "type": "boolean"
+        },
+        "images": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Image"
+          }
+        },
+        "lighting": {
+          "type": "boolean"
+        },
+        "refrigeration_outlet": {
+          "type": "boolean"
+        },
+        "standards": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[\\x20-\\x7e]*$",
+            "x-ocpi-case-insensitive": true,
+            "maxLength": 36
+          }
+        },
+        "apds_reference": {
+          "type": "string",
+          "pattern": "^[\\x20-\\x7e]*$",
+          "x-ocpi-case-insensitive": true
+        }
+      },
+      "required": [
+        "id",
+        "vehicle_types",
+        "restricted_to_type",
+        "reservation_required"
+      ],
+      "x-ocpi-spec": "mod_locations.asciidoc"
+    },
+    "ParkingDirection": {
+      "title": "ParkingDirection",
+      "type": "string",
+      "enum": [
+        "PARALLELa",
+        "PERPENDICULARa",
+        "ANGLEa"
+      ],
+      "x-ocpi-spec": "mod_locations.asciidoc"
+    },
+    "ParkingRestriction": {
+      "title": "ParkingRestriction",
+      "type": "string",
+      "x-ocpi-open-enum": true,
+      "examples": [
+        "CUSTOMERS",
+        "DISABLED",
+        "EMPLOYEES",
+        "EV_ONLY",
+        "MOTORCYCLES",
+        "PLUGGED",
+        "TAXIS",
+        "TENANTS"
+      ],
+      "x-ocpi-spec": "mod_locations.asciidoc"
+    },
+    "ParkingType": {
+      "title": "ParkingType",
+      "type": "string",
+      "x-ocpi-open-enum": true,
+      "examples": [
+        "ALONG_MOTORWAY",
+        "PARKING_GARAGE",
+        "PARKING_LOT",
+        "ON_DRIVEWAY",
+        "ON_STREET",
+        "UNDERGROUND_GARAGE"
+      ],
+      "x-ocpi-spec": "mod_locations.asciidoc"
+    },
+    "PowerType": {
+      "title": "PowerType",
+      "type": "string",
+      "enum": [
+        "AC_1_PHASE",
+        "AC_2_PHASE",
+        "AC_2_PHASE_SPLIT",
+        "AC_3_PHASE",
+        "DC"
+      ],
+      "x-ocpi-spec": "mod_locations.asciidoc"
+    },
+    "Price": {
+      "title": "Price",
+      "type": "object",
+      "properties": {
+        "before_taxes": {
+          "type": "number"
+        },
+        "taxes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/TaxAmount"
+          }
+        }
+      },
+      "required": [
+        "before_taxes"
+      ],
+      "x-ocpi-spec": "types.asciidoc"
+    },
+    "PriceComponent": {
+      "title": "PriceComponent",
+      "type": "object",
+      "properties": {
+        "type": {
+          "$ref": "#/$defs/TariffDimensionType"
+        },
+        "price": {
+          "type": "number"
+        },
+        "vat": {
+          "type": "number"
+        },
+        "step_size": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "type",
+        "price",
+        "step_size"
+      ],
+      "x-ocpi-spec": "mod_tariffs.asciidoc"
+    },
+    "PriceLimit": {
+      "title": "PriceLimit",
+      "type": "object",
+      "properties": {
+        "before_taxes": {
+          "type": "number"
+        },
+        "after_taxes": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "before_taxes"
+      ],
+      "x-ocpi-spec": "mod_tariffs.asciidoc"
+    },
+    "ProfileType": {
+      "title": "ProfileType",
+      "type": "string",
+      "enum": [
+        "CHEAP",
+        "FAST",
+        "GREEN",
+        "REGULAR"
+      ],
+      "x-ocpi-spec": "mod_sessions.asciidoc"
+    },
+    "PublishTokenType": {
+      "title": "PublishTokenType",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "pattern": "^[\\x20-\\x7e]*$",
+          "x-ocpi-case-insensitive": true,
+          "maxLength": 36
+        },
+        "type": {
+          "$ref": "#/$defs/TokenType"
+        },
+        "visual_number": {
+          "type": "string",
+          "pattern": "^[^\\x00-\\x1f\\x7f]*$",
+          "maxLength": 64
+        },
+        "issuer": {
+          "type": "string",
+          "pattern": "^[^\\x00-\\x1f\\x7f]*$",
+          "maxLength": 64
+        },
+        "group_id": {
+          "type": "string",
+          "pattern": "^[\\x20-\\x7e]*$",
+          "x-ocpi-case-insensitive": true,
+          "maxLength": 36
+        }
+      },
+      "x-ocpi-spec": "mod_locations.asciidoc"
+    },
+    "RegularHours": {
+      "title": "RegularHours",
+      "type": "object",
+      "properties": {
+        "weekday": {
+          "type": "integer"
+        },
+        "period_begin": {
+          "type": "string",
+          "pattern": "^[^\\x00-\\x1f\\x7f]*$",
+          "maxLength": 5
+        },
+        "period_end": {
+          "type": "string",
+          "pattern": "^[^\\x00-\\x1f\\x7f]*$",
+          "maxLength": 5
+        }
+      },
+      "required": [
+        "weekday",
+        "period_begin",
+        "period_end"
+      ],
+      "x-ocpi-spec": "mod_locations.asciidoc"
+    },
+    "ReservationRestrictionType": {
+      "title": "ReservationRestrictionType",
+      "type": "string",
+      "enum": [
+        "RESERVATION",
+        "RESERVATION_EXPIRES"
+      ],
+      "x-ocpi-spec": "mod_tariffs.asciidoc"
+    },
+    "ReserveNow": {
+      "title": "ReserveNow",
+      "type": "object",
+      "properties": {
+        "response_url": {
+          "type": "string",
+          "maxLength": 255,
+          "format": "uri"
+        },
+        "token": {
+          "$ref": "#/$defs/Token"
+        },
+        "expiry_date": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z?$",
+          "x-ocpi-type": "DateTime"
+        },
+        "reservation_id": {
+          "type": "string",
+          "pattern": "^[\\x20-\\x7e]*$",
+          "x-ocpi-case-insensitive": true,
+          "maxLength": 36
+        },
+        "location_id": {
+          "type": "string",
+          "pattern": "^[\\x20-\\x7e]*$",
+          "x-ocpi-case-insensitive": true,
+          "maxLength": 36
+        },
+        "evse_uid": {
+          "type": "string",
+          "pattern": "^[\\x20-\\x7e]*$",
+          "x-ocpi-case-insensitive": true,
+          "maxLength": 36
+        },
+        "authorization_reference": {
+          "type": "string",
+          "pattern": "^[\\x20-\\x7e]*$",
+          "x-ocpi-case-insensitive": true,
+          "maxLength": 36
+        }
+      },
+      "required": [
+        "response_url",
+        "token",
+        "expiry_date",
+        "reservation_id",
+        "location_id"
+      ],
+      "x-ocpi-spec": "mod_commands.asciidoc"
+    },
+    "Role": {
+      "title": "Role",
+      "type": "string",
+      "enum": [
+        "CPO",
+        "EMSP",
+        "NAP",
+        "NSP",
+        "OTHER",
+        "SCSP"
+      ],
+      "x-ocpi-spec": "types.asciidoc"
+    },
+    "Session": {
+      "title": "Session",
+      "type": "object",
+      "properties": {
+        "country_code": {
+          "type": "string",
+          "pattern": "^[\\x20-\\x7e]*$",
+          "x-ocpi-case-insensitive": true,
+          "maxLength": 2
+        },
+        "party_id": {
+          "type": "string",
+          "pattern": "^[\\x20-\\x7e]*$",
+          "x-ocpi-case-insensitive": true,
+          "maxLength": 3
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^[\\x20-\\x7e]*$",
+          "x-ocpi-case-insensitive": true,
+          "maxLength": 36
+        },
+        "start_date_time": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z?$",
+          "x-ocpi-type": "DateTime"
+        },
+        "end_date_time": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z?$",
+          "x-ocpi-type": "DateTime"
+        },
+        "kwh": {
+          "type": "number"
+        },
+        "cdr_token": {
+          "$ref": "#/$defs/CdrToken"
+        },
+        "auth_method": {
+          "$ref": "#/$defs/AuthMethod"
+        },
+        "authorization_reference": {
+          "type": "string",
+          "pattern": "^[\\x20-\\x7e]*$",
+          "x-ocpi-case-insensitive": true,
+          "maxLength": 36
+        },
+        "location_id": {
+          "type": "string",
+          "pattern": "^[\\x20-\\x7e]*$",
+          "x-ocpi-case-insensitive": true,
+          "maxLength": 36
+        },
+        "evse_uid": {
+          "type": "string",
+          "pattern": "^[\\x20-\\x7e]*$",
+          "x-ocpi-case-insensitive": true,
+          "maxLength": 36
+        },
+        "connector_id": {
+          "type": "string",
+          "pattern": "^[\\x20-\\x7e]*$",
+          "x-ocpi-case-insensitive": true,
+          "maxLength": 36
+        },
+        "meter_id": {
+          "type": "string",
+          "pattern": "^[^\\x00-\\x1f\\x7f]*$",
+          "maxLength": 255
+        },
+        "currency": {
+          "type": "string",
+          "pattern": "^[^\\x00-\\x1f\\x7f]*$",
+          "maxLength": 3
+        },
+        "charging_periods": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ChargingPeriod"
+          }
+        },
+        "total_cost": {
+          "$ref": "#/$defs/Price"
+        },
+        "status": {
+          "$ref": "#/$defs/SessionStatus"
+        },
+        "last_updated": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z?$",
+          "x-ocpi-type": "DateTime"
+        },
+        "extensions": {
+          "$ref": "#/$defs/Extensions"
+        }
+      },
+      "required": [
+        "country_code",
+        "party_id",
+        "id",
+        "start_date_time",
+        "kwh",
+        "cdr_token",
+        "auth_method",
+        "location_id",
+        "evse_uid",
+        "connector_id",
+        "currency",
+        "status",
+        "last_updated"
+      ],
+      "x-ocpi-spec": "mod_sessions.asciidoc"
+    },
+    "SessionStatus": {
+      "title": "SessionStatus",
+      "type": "string",
+      "enum": [
+        "ACTIVE",
+        "COMPLETED",
+        "INVALID",
+        "PENDING",
+        "RESERVATION"
+      ],
+      "x-ocpi-spec": "mod_sessions.asciidoc"
+    },
+    "SignedData": {
+      "title": "SignedData",
+      "type": "object",
+      "properties": {
+        "encoding_method": {
+          "type": "string",
+          "pattern": "^[\\x20-\\x7e]*$",
+          "x-ocpi-case-insensitive": true,
+          "maxLength": 36
+        },
+        "encoding_method_version": {
+          "type": "integer"
+        },
+        "public_key": {
+          "type": "string",
+          "pattern": "^[^\\x00-\\x1f\\x7f]*$",
+          "maxLength": 512
+        },
+        "signed_values": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SignedValue"
+          },
+          "minItems": 1
+        },
+        "url": {
+          "type": "string",
+          "pattern": "^[^\\x00-\\x1f\\x7f]*$",
+          "maxLength": 512
+        }
+      },
+      "required": [
+        "encoding_method",
+        "signed_values"
+      ],
+      "x-ocpi-spec": "mod_cdrs.asciidoc"
+    },
+    "SignedValue": {
+      "title": "SignedValue",
+      "type": "object",
+      "properties": {
+        "nature": {
+          "type": "string",
+          "pattern": "^[\\x20-\\x7e]*$",
+          "x-ocpi-case-insensitive": true,
+          "maxLength": 32
+        },
+        "plain_data": {
+          "type": "string",
+          "pattern": "^[^\\x00-\\x1f\\x7f]*$",
+          "maxLength": 512
+        },
+        "signed_data": {
+          "type": "string",
+          "pattern": "^[^\\x00-\\x1f\\x7f]*$",
+          "maxLength": 5000
+        }
+      },
+      "required": [
+        "nature",
+        "plain_data",
+        "signed_data"
+      ],
+      "x-ocpi-spec": "mod_cdrs.asciidoc"
+    },
+    "StartSession": {
+      "title": "StartSession",
+      "type": "object",
+      "properties": {
+        "response_url": {
+          "type": "string",
+          "maxLength": 255,
+          "format": "uri"
+        },
+        "token": {
+          "$ref": "#/$defs/Token"
+        },
+        "location_id": {
+          "type": "string",
+          "pattern": "^[\\x20-\\x7e]*$",
+          "x-ocpi-case-insensitive": true,
+          "maxLength": 36
+        },
+        "evse_uid": {
+          "type": "string",
+          "pattern": "^[\\x20-\\x7e]*$",
+          "x-ocpi-case-insensitive": true,
+          "maxLength": 36
+        },
+        "connector_id": {
+          "type": "string",
+          "pattern": "^[\\x20-\\x7e]*$",
+          "x-ocpi-case-insensitive": true,
+          "maxLength": 36
+        },
+        "authorization_reference": {
+          "type": "string",
+          "pattern": "^[\\x20-\\x7e]*$",
+          "x-ocpi-case-insensitive": true,
+          "maxLength": 36
+        }
+      },
+      "required": [
+        "response_url",
+        "token",
+        "location_id"
+      ],
+      "x-ocpi-spec": "mod_commands.asciidoc"
+    },
+    "Status": {
+      "title": "Status",
+      "type": "string",
+      "enum": [
+        "AVAILABLE",
+        "BLOCKED",
+        "CHARGING",
+        "INOPERATIVE",
+        "OUTOFORDER",
+        "PLANNED",
+        "REMOVED",
+        "RESERVED",
+        "UNKNOWN"
+      ],
+      "x-ocpi-spec": "mod_locations.asciidoc"
+    },
+    "StatusSchedule": {
+      "title": "StatusSchedule",
+      "type": "object",
+      "properties": {
+        "period_begin": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z?$",
+          "x-ocpi-type": "DateTime"
+        },
+        "period_end": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z?$",
+          "x-ocpi-type": "DateTime"
+        },
+        "status": {
+          "$ref": "#/$defs/Status"
+        }
+      },
+      "required": [
+        "period_begin",
+        "status"
+      ],
+      "x-ocpi-spec": "mod_locations.asciidoc"
+    },
+    "StopSession": {
+      "title": "StopSession",
+      "type": "object",
+      "properties": {
+        "response_url": {
+          "type": "string",
+          "maxLength": 255,
+          "format": "uri"
+        },
+        "session_id": {
+          "type": "string",
+          "pattern": "^[\\x20-\\x7e]*$",
+          "x-ocpi-case-insensitive": true,
+          "maxLength": 36
+        }
+      },
+      "required": [
+        "response_url",
+        "session_id"
+      ],
+      "x-ocpi-spec": "mod_commands.asciidoc"
+    },
+    "Tariff": {
+      "title": "Tariff",
+      "type": "object",
+      "properties": {
+        "country_code": {
+          "type": "string",
+          "pattern": "^[\\x20-\\x7e]*$",
+          "x-ocpi-case-insensitive": true,
+          "maxLength": 2
+        },
+        "party_id": {
+          "type": "string",
+          "pattern": "^[\\x20-\\x7e]*$",
+          "x-ocpi-case-insensitive": true,
+          "maxLength": 3
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^[\\x20-\\x7e]*$",
+          "x-ocpi-case-insensitive": true,
+          "maxLength": 36
+        },
+        "currency": {
+          "type": "string",
+          "pattern": "^[^\\x00-\\x1f\\x7f]*$",
+          "maxLength": 3
+        },
+        "type": {
+          "$ref": "#/$defs/TariffType"
+        },
+        "tariff_alt_text": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/DisplayText"
+          }
+        },
+        "tariff_alt_url": {
+          "type": "string",
+          "maxLength": 255,
+          "format": "uri"
+        },
+        "min_price": {
+          "$ref": "#/$defs/PriceLimit"
+        },
+        "max_price": {
+          "$ref": "#/$defs/PriceLimit"
+        },
+        "preauthorize_amount": {
+          "type": "number"
+        },
+        "elements": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/TariffElement"
+          },
+          "minItems": 1
+        },
+        "tax_included": {
+          "$ref": "#/$defs/TaxIncluded"
+        },
+        "start_date_time": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z?$",
+          "x-ocpi-type": "DateTime"
+        },
+        "end_date_time": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z?$",
+          "x-ocpi-type": "DateTime"
+        },
+        "energy_mix": {
+          "$ref": "#/$defs/EnergyMix"
+        },
+        "last_updated": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z?$",
+          "x-ocpi-type": "DateTime"
+        }
+      },
+      "required": [
+        "country_code",
+        "party_id",
+        "id",
+        "currency",
+        "elements",
+        "tax_included",
+        "last_updated"
+      ],
+      "x-ocpi-spec": "mod_tariffs.asciidoc"
+    },
+    "TariffDimensionType": {
+      "title": "TariffDimensionType",
+      "type": "string",
+      "enum": [
+        "ENERGY",
+        "FLAT",
+        "PARKING_TIME",
+        "TIME"
+      ],
+      "x-ocpi-spec": "mod_tariffs.asciidoc"
+    },
+    "TariffElement": {
+      "title": "TariffElement",
+      "type": "object",
+      "properties": {
+        "price_components": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/PriceComponent"
+          },
+          "minItems": 1
+        },
+        "restrictions": {
+          "$ref": "#/$defs/TariffRestrictions"
+        }
+      },
+      "required": [
+        "price_components"
+      ],
+      "x-ocpi-spec": "mod_tariffs.asciidoc"
+    },
+    "TariffRestrictions": {
+      "title": "TariffRestrictions",
+      "type": "object",
+      "properties": {
+        "start_time": {
+          "type": "string",
+          "pattern": "^[^\\x00-\\x1f\\x7f]*$",
+          "maxLength": 5
+        },
+        "end_time": {
+          "type": "string",
+          "pattern": "^[^\\x00-\\x1f\\x7f]*$",
+          "maxLength": 5
+        },
+        "start_date": {
+          "type": "string",
+          "pattern": "^[^\\x00-\\x1f\\x7f]*$",
+          "maxLength": 10
+        },
+        "end_date": {
+          "type": "string",
+          "pattern": "^[^\\x00-\\x1f\\x7f]*$",
+          "maxLength": 10
+        },
+        "min_kwh": {
+          "type": "number"
+        },
+        "max_kwh": {
+          "type": "number"
+        },
+        "min_current": {
+          "type": "number"
+        },
+        "max_current": {
+          "type": "number"
+        },
+        "min_power": {
+          "type": "number"
+        },
+        "max_power": {
+          "type": "number"
+        },
+        "min_duration": {
+          "type": "integer"
+        },
+        "max_duration": {
+          "type": "integer"
+        },
+        "day_of_week": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/DayOfWeek"
+          }
+        },
+        "reservation": {
+          "$ref": "#/$defs/ReservationRestrictionType"
+        }
+      },
+      "x-ocpi-spec": "mod_tariffs.asciidoc"
+    },
+    "TariffType": {
+      "title": "TariffType",
+      "type": "string",
+      "enum": [
+        "AD_HOC_PAYMENT",
+        "PROFILE_CHEAP",
+        "PROFILE_FAST",
+        "PROFILE_GREEN",
+        "REGULAR"
+      ],
+      "x-ocpi-spec": "mod_tariffs.asciidoc"
+    },
+    "TaxAmount": {
+      "title": "TaxAmount",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^[^\\x00-\\x1f\\x7f]*$"
+        },
+        "account_number": {
+          "type": "string",
+          "pattern": "^[^\\x00-\\x1f\\x7f]*$"
+        },
+        "percentage": {
+          "type": "number"
+        },
+        "amount": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "name",
+        "amount"
+      ],
+      "x-ocpi-spec": "types.asciidoc"
+    },
+    "TaxIncluded": {
+      "title": "TaxIncluded",
+      "type": "string",
+      "enum": [
+        "YES",
+        "NO",
+        "N/A"
+      ],
+      "x-ocpi-spec": "mod_tariffs.asciidoc"
+    },
+    "Token": {
+      "title": "Token",
+      "type": "object",
+      "properties": {
+        "country_code": {
+          "type": "string",
+          "pattern": "^[\\x20-\\x7e]*$",
+          "x-ocpi-case-insensitive": true,
+          "maxLength": 2
+        },
+        "party_id": {
+          "type": "string",
+          "pattern": "^[\\x20-\\x7e]*$",
+          "x-ocpi-case-insensitive": true,
+          "maxLength": 3
+        },
+        "uid": {
+          "type": "string",
+          "pattern": "^[\\x20-\\x7e]*$",
+          "x-ocpi-case-insensitive": true,
+          "maxLength": 36
+        },
+        "type": {
+          "$ref": "#/$defs/TokenType"
+        },
+        "contract_id": {
+          "type": "string",
+          "pattern": "^[\\x20-\\x7e]*$",
+          "x-ocpi-case-insensitive": true,
+          "maxLength": 36
+        },
+        "visual_number": {
+          "type": "string",
+          "pattern": "^[^\\x00-\\x1f\\x7f]*$",
+          "maxLength": 64
+        },
+        "issuer": {
+          "type": "string",
+          "pattern": "^[^\\x00-\\x1f\\x7f]*$",
+          "maxLength": 64
+        },
+        "group_id": {
+          "type": "string",
+          "pattern": "^[\\x20-\\x7e]*$",
+          "x-ocpi-case-insensitive": true,
+          "maxLength": 36
+        },
+        "valid": {
+          "type": "boolean"
+        },
+        "whitelist": {
+          "$ref": "#/$defs/WhitelistType"
+        },
+        "language": {
+          "type": "string",
+          "pattern": "^[^\\x00-\\x1f\\x7f]*$",
+          "maxLength": 2
+        },
+        "default_profile_type": {
+          "$ref": "#/$defs/ProfileType"
+        },
+        "energy_contract": {
+          "$ref": "#/$defs/EnergyContract"
+        },
+        "last_updated": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z?$",
+          "x-ocpi-type": "DateTime"
+        },
+        "extensions": {
+          "$ref": "#/$defs/Extensions"
+        }
+      },
+      "required": [
+        "country_code",
+        "party_id",
+        "uid",
+        "type",
+        "contract_id",
+        "issuer",
+        "valid",
+        "whitelist",
+        "last_updated"
+      ],
+      "x-ocpi-spec": "mod_tokens.asciidoc"
+    },
+    "TokenType": {
+      "title": "TokenType",
+      "type": "string",
+      "x-ocpi-open-enum": true,
+      "examples": [
+        "AD_HOC_USER",
+        "APP_USER",
+        "EMAID",
+        "OTHER",
+        "RFID"
+      ],
+      "x-ocpi-spec": "mod_tokens.asciidoc"
+    },
+    "UnlockConnector": {
+      "title": "UnlockConnector",
+      "type": "object",
+      "properties": {
+        "response_url": {
+          "type": "string",
+          "maxLength": 255,
+          "format": "uri"
+        },
+        "location_id": {
+          "type": "string",
+          "pattern": "^[\\x20-\\x7e]*$",
+          "x-ocpi-case-insensitive": true,
+          "maxLength": 36
+        },
+        "evse_uid": {
+          "type": "string",
+          "pattern": "^[\\x20-\\x7e]*$",
+          "x-ocpi-case-insensitive": true,
+          "maxLength": 36
+        },
+        "connector_id": {
+          "type": "string",
+          "pattern": "^[\\x20-\\x7e]*$",
+          "x-ocpi-case-insensitive": true,
+          "maxLength": 36
+        }
+      },
+      "required": [
+        "response_url",
+        "location_id",
+        "evse_uid",
+        "connector_id"
+      ],
+      "x-ocpi-spec": "mod_commands.asciidoc"
+    },
+    "VehicleType": {
+      "title": "VehicleType",
+      "type": "string",
+      "x-ocpi-open-enum": true,
+      "examples": [
+        "MOTORCYCLE",
+        "PERSONAL_VEHICLE",
+        "PERSONAL_VEHICLE_WITH_TRAILER",
+        "VAN",
+        "SEMI_TRACTOR",
+        "RIGID",
+        "TRUCK_WITH_TRAILER",
+        "BUS",
+        "DISABLED"
+      ],
+      "x-ocpi-spec": "mod_locations.asciidoc"
+    },
+    "WhitelistType": {
+      "title": "WhitelistType",
+      "type": "string",
+      "enum": [
+        "ALWAYS",
+        "ALLOWED",
+        "ALLOWED_OFFLINE",
+        "NEVER"
+      ],
+      "x-ocpi-spec": "mod_tokens.asciidoc"
+    }
+  }
+}

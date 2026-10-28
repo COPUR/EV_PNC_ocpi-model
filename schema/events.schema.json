@@ -1,0 +1,169 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/COPUR/EV_PNC_ocpi-model/schema/events.schema.json",
+  "$comment": "Hand-written. Every event is an EventEnvelope plus a typed body. Payloads reuse the OCPI definitions in ocpi.schema.json. Add an event or a field by ADR and a minor version; remove or retype by ADR and a major version.",
+  "$defs": {
+    "EventEnvelope": {
+      "title": "EventEnvelope",
+      "type": "object",
+      "properties": {
+        "event_id": {"type": "string", "format": "uuid", "description": "Unique per event; consumers de-duplicate on it."},
+        "event_type": {"type": "string", "description": "Discriminator, one of the event names below."},
+        "schema_version": {"type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$", "description": "ocpi-model version the producer built against."},
+        "occurred_at": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$", "description": "UTC, RFC 3339, always with Z. Display in Europe/Istanbul (+03:00) at the edge only."},
+        "producer": {"type": "string", "maxLength": 64, "description": "Component name, for example ocpi-emsp or hub-gateway."},
+        "correlation_id": {"type": "string", "maxLength": 64, "description": "Ties the events of one authorization, session or consent change together."},
+        "channel": {"$ref": "#/$defs/Channel"}
+      },
+      "required": ["event_id", "event_type", "schema_version", "occurred_at", "producer"]
+    },
+    "Channel": {
+      "title": "Channel",
+      "type": "string",
+      "enum": ["BILATERAL_OCPI", "HUB", "GUEST"],
+      "description": "How the CPO was reached. The K1 evidence count is reported per channel."
+    },
+    "Hub": {
+      "title": "Hub",
+      "type": "string",
+      "enum": ["HUBJECT", "GIREVE", "E_CLEARING"]
+    },
+    "DecisionOutcome": {
+      "title": "DecisionOutcome",
+      "type": "string",
+      "enum": ["ALLOWED", "BLOCKED", "NO_CREDIT", "NOT_ALLOWED"],
+      "description": "Same values as the OCPI AllowedType, so a decision maps to an AuthorizationInfo without translation."
+    },
+    "DecisionReason": {
+      "title": "DecisionReason",
+      "type": "string",
+      "enum": [
+        "TOKEN_UNKNOWN",
+        "TOKEN_INVALID",
+        "NO_GRANT",
+        "GRANT_REVOKED",
+        "OPERATOR_BLOCKED",
+        "OPERATOR_NOT_ALLOWED",
+        "PRICE_OVER_THRESHOLD",
+        "PAYMENT_UNAVAILABLE",
+        "LOCATION_NOT_REFERENCED",
+        "OTHER"
+      ],
+      "description": "Why a request was not allowed, or which rule decided it. No personal data."
+    },
+    "ConsentChange": {
+      "title": "ConsentChange",
+      "type": "string",
+      "enum": ["GRANTED", "AMENDED", "REVOKED", "EXPIRED"]
+    },
+    "TokenAuthorizeRequested": {
+      "title": "TokenAuthorizeRequested",
+      "allOf": [
+        {"$ref": "#/$defs/EventEnvelope"},
+        {
+          "type": "object",
+          "properties": {
+            "event_type": {"const": "TokenAuthorizeRequested"},
+            "request_id": {"type": "string", "maxLength": 64},
+            "token_uid": {"type": "string", "maxLength": 36},
+            "token_type": {"$ref": "ocpi.schema.json#/$defs/TokenType"},
+            "location_references": {"$ref": "ocpi.schema.json#/$defs/LocationReferences"},
+            "cpo_country_code": {"type": "string", "maxLength": 2},
+            "cpo_party_id": {"type": "string", "maxLength": 3},
+            "hub": {"$ref": "#/$defs/Hub"}
+          },
+          "required": ["request_id", "token_uid", "token_type"]
+        }
+      ]
+    },
+    "TokenAuthorizeDecided": {
+      "title": "TokenAuthorizeDecided",
+      "allOf": [
+        {"$ref": "#/$defs/EventEnvelope"},
+        {
+          "type": "object",
+          "properties": {
+            "event_type": {"const": "TokenAuthorizeDecided"},
+            "request_id": {"type": "string", "maxLength": 64, "description": "The TokenAuthorizeRequested this answers."},
+            "outcome": {"$ref": "#/$defs/DecisionOutcome"},
+            "reasons": {"type": "array", "items": {"$ref": "#/$defs/DecisionReason"}},
+            "authorization_info": {"$ref": "ocpi.schema.json#/$defs/AuthorizationInfo"},
+            "decided_by": {"type": "string", "maxLength": 64, "description": "policy-engine, consent-decision or similar."},
+            "latency_ms": {"type": "integer", "minimum": 0}
+          },
+          "required": ["request_id", "outcome"]
+        }
+      ]
+    },
+    "SessionStarted": {
+      "title": "SessionStarted",
+      "allOf": [
+        {"$ref": "#/$defs/EventEnvelope"},
+        {
+          "type": "object",
+          "properties": {
+            "event_type": {"const": "SessionStarted"},"session": {"$ref": "ocpi.schema.json#/$defs/Session"}},
+          "required": ["session"]
+        }
+      ]
+    },
+    "SessionUpdated": {
+      "title": "SessionUpdated",
+      "allOf": [
+        {"$ref": "#/$defs/EventEnvelope"},
+        {
+          "type": "object",
+          "properties": {
+            "event_type": {"const": "SessionUpdated"},"session": {"$ref": "ocpi.schema.json#/$defs/Session"}},
+          "required": ["session"]
+        }
+      ]
+    },
+    "SessionEnded": {
+      "title": "SessionEnded",
+      "allOf": [
+        {"$ref": "#/$defs/EventEnvelope"},
+        {
+          "type": "object",
+          "properties": {
+            "event_type": {"const": "SessionEnded"},"session": {"$ref": "ocpi.schema.json#/$defs/Session"}},
+          "required": ["session"]
+        }
+      ]
+    },
+    "CdrReceived": {
+      "title": "CdrReceived",
+      "allOf": [
+        {"$ref": "#/$defs/EventEnvelope"},
+        {
+          "type": "object",
+          "properties": {
+            "event_type": {"const": "CdrReceived"},
+            "cdr": {"$ref": "ocpi.schema.json#/$defs/CDR"},
+            "hub": {"$ref": "#/$defs/Hub"}
+          },
+          "required": ["cdr"]
+        }
+      ]
+    },
+    "GrantChanged": {
+      "title": "GrantChanged",
+      "allOf": [
+        {"$ref": "#/$defs/EventEnvelope"},
+        {
+          "type": "object",
+          "properties": {
+            "event_type": {"const": "GrantChanged"},
+            "grant_id": {"type": "string", "maxLength": 64},
+            "subject_ref": {"type": "string", "maxLength": 64, "description": "Pseudonymous subject reference. Never a name, plate or contract id."},
+            "purpose": {"type": "string", "maxLength": 64, "description": "Purpose code from the consent catalogue."},
+            "change": {"$ref": "#/$defs/ConsentChange"},
+            "policy_version": {"type": "string", "maxLength": 32},
+            "effective_at": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?Z$"}
+          },
+          "required": ["grant_id", "subject_ref", "purpose", "change", "effective_at"]
+        }
+      ]
+    }
+  }
+}

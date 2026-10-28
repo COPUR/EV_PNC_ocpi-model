@@ -1,0 +1,6 @@
+{
+  "repo": "https://github.com/COPUR/ocpi",
+  "tag": "v2.3.0",
+  "commit": "efdf2c5283c95b69caf11c2e39f432626bead730",
+  "note": "Merge tag v2.3.0 on master. Move with an ADR and a semver bump."
+}
