@@ -1,6 +1,6 @@
 # EV_PNC_ocpi-model
 
-Canonical OCPI 2.3.0-shaped model, domain events and error model shared by all EV_PNC_ services. Schema first; generated Kotlin, Python, Go and Swift types. Seeded from COPUR/ocpi.
+Canonical OCPI 2.3.0-shaped model, domain events and error model shared by all EV_PNC_ services. Schema first; generated Java, Python, Go and TypeScript types. Seeded from COPUR/ocpi.
 
 Part of the **EV_PNC** platform: a neutral eMSP integration layer for Turkey-first, Europe-ready Plug&Charge, navigation and payments. The platform is neither a CPO nor a payment institution.
 
@@ -16,7 +16,7 @@ Part of the **EV_PNC** platform: a neutral eMSP integration layer for Turkey-fir
 
 ## Tech stack
 
-JSON Schema, OpenAPI, code generation (Kotlin, Python, Go, Swift)
+JSON Schema, OpenAPI, code generation (Java, Python, Go, TypeScript)
 
 ## Packaging
 
@@ -30,7 +30,7 @@ JSON Schema, OpenAPI, code generation (Kotlin, Python, Go, Swift)
 
 ```
 schema/
-generated/{kotlin,python,go,swift}/
+generated/{java,python,go,typescript}/
 CHANGELOG.md
 ```
 
